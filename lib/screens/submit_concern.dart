@@ -3,24 +3,45 @@ import 'package:crud_fluter_firebase/services/nickname_service.dart';
 import 'package:crud_fluter_firebase/services/concern_service.dart';
 import 'package:flutter/material.dart';
 
-class SavingData extends StatelessWidget {
-  final _concern = Concern();
-  SavingData({super.key});
+class SavingData extends StatefulWidget {
+  const SavingData({Key? key}) : super(key: key);
 
-// This code will return your nickname
+  @override
+  State<SavingData> createState() => _SavingDataState();
+}
+
+class _SavingDataState extends State<SavingData> {
+  final _concern = Concern();
+  String _selectedUrgency = 'Low';
+  List<String> urgency = ['Low', 'High'];
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final locationusernameController = TextEditingController();
+
+  // This code will return your nickname
   String nickname() {
     return Nickname().readNickname();
   }
 
   @override
   Widget build(BuildContext context) {
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
-    final locationusernameController = TextEditingController();
-
     return Scaffold(
       body: Column(
         children: [
+          DropdownButton<String>(
+            value: _selectedUrgency,
+            items: urgency.map((item) {
+              return DropdownMenuItem<String>(
+                value: item,
+                child: Text(item),
+              );
+            }).toList(),
+            onChanged: (item) {
+              setState(() {
+                _selectedUrgency = item!;
+              });
+            },
+          ),
           TextField(
             controller: titleController,
             decoration: const InputDecoration(hintText: 'Title'),
@@ -35,11 +56,12 @@ class SavingData extends StatelessWidget {
           ),
           IconButton(
             onPressed: () {
-              // final String username = usernameController.text;
               _concern.addUsername(
-                  title: titleController.text,
-                  description: descriptionController.text,
-                  location: locationusernameController.text);
+                title: titleController.text,
+                description: descriptionController.text,
+                location: locationusernameController.text,
+                urgency: _selectedUrgency,
+              );
             },
             icon: const Icon(Icons.add),
           )
