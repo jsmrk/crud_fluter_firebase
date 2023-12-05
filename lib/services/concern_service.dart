@@ -11,6 +11,7 @@ class Concern {
     required String title,
     required String description,
     required String location,
+    required List<String> imageURLs,
   }) async {
     // Load the concern index from Hive
     await loadIndex();
@@ -32,6 +33,7 @@ class Concern {
       'location': location,
       'datetime': DateTime.now(),
       'urgency': urgency,
+      'imageURL': imageURLs,
     };
     await docUser.set(json);
 

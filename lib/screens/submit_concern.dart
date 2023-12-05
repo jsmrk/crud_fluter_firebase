@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crud_fluter_firebase/services/nickname_service.dart';
 import 'package:crud_fluter_firebase/services/concern_service.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -121,12 +122,24 @@ class _SavingDataState extends State<SavingData> {
             decoration: const InputDecoration(hintText: 'Location'),
           ),
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+              List<String> downloadURLs = [];
+              for (int index = 0; index < selectedImages.length; index++) {
+                final storageRef = FirebaseStorage.instance.ref(
+                    'images/${selectedImages[index].path.split('/').last}');
+                final uploadTask = storageRef.putFile(selectedImages[index]);
+                final snapshot = await uploadTask.whenComplete(() => null);
+                final downloadURL = await storageRef.getDownloadURL();
+                downloadURLs.add(downloadURL);
+              }
+
+              // Add the concern with download URLs
               _concern.addUsername(
                 title: titleController.text,
                 description: descriptionController.text,
                 location: locationusernameController.text,
                 urgency: _selectedUrgency,
+                imageURLs: downloadURLs,
               );
             },
             icon: const Icon(Icons.add),
