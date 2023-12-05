@@ -5,7 +5,10 @@ import 'nickname_service.dart';
 class Concern {
   int index = 0;
 
-  Future addUsername({required String name}) async {
+  Future addUsername(
+      {required String title,
+      required String description,
+      required String location}) async {
     String nickname() {
       return Nickname().readNickname();
     }
@@ -17,9 +20,10 @@ class Concern {
         .doc(index.toString());
 
     final json = {
-      'name': name,
-      'age': 23,
-      'birtday': DateTime.now(),
+      'title': title,
+      'description': description,
+      'location': location,
+      'datetime': DateTime.now(),
     };
     await docUser.set(json);
 

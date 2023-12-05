@@ -2,7 +2,7 @@ import 'package:crud_fluter_firebase/services/nickname_service.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-import 'saving_data.dart';
+import 'submit_concern.dart';
 
 // This will ask for a name will be use as an ID in firebase database
 // I will use hive to save the nickname locally

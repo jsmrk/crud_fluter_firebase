@@ -16,7 +16,7 @@ Future<void> main() async {
   await Hive.initFlutter();
   //openHiveBox
   await Hive.openBox('nicknameBox');
-  await Hive.openBox('concernBox');
+  await Hive.openBox('concernIndexBox');
 
   runApp(const MyApp());
 }
