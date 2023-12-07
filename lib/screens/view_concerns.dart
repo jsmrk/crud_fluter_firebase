@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crud_fluter_firebase/services/saving_concern_service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../models/concern_model.dart';
 import '../services/nickname_service.dart';
@@ -17,6 +18,7 @@ class ViewConcerns extends StatelessWidget {
         .collection('nickname')
         .doc(nickname())
         .collection('concern')
+        .orderBy('datetime', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) {
               final data = doc.data();
@@ -43,8 +45,19 @@ class ViewConcerns extends StatelessWidget {
             }).toList());
   }
 
+  String getFormattedDate(Concern concern) {
+    final dateTime = concern.dateTime;
+    final formatter = DateFormat('yyyy-MM-dd'); // Customize format as needed
+    return formatter.format(dateTime);
+  }
+
+  String getFormattedTime(Concern concern) {
+    final dateTime = concern.dateTime;
+    final formatter = DateFormat('h:mm a'); // Customize format as needed
+    return formatter.format(dateTime);
+  }
+
   Widget buildConcern(Concern concern) {
-    // Use the existing code to display concern details
     return Container(
       margin: const EdgeInsets.all(31),
       alignment: Alignment.center,
@@ -55,7 +68,8 @@ class ViewConcerns extends StatelessWidget {
           Text(concern.title),
           Text(concern.description),
           Text(concern.location),
-          Text(concern.dateTime.toString()),
+          Text(getFormattedDate(concern)),
+          Text(getFormattedTime(concern)),
         ],
       ),
     );
@@ -83,7 +97,6 @@ class ViewConcerns extends StatelessWidget {
               );
             }
           } else {
-            // Add a loading widget while waiting for data
             return const CircularProgressIndicator();
           }
         },
