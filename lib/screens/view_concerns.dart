@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../models/concern_model.dart';
 import '../services/nickname_service.dart';
+import 'show_modal.dart';
 
 class ViewConcerns extends StatelessWidget {
   ViewConcerns({super.key});
@@ -57,7 +58,7 @@ class ViewConcerns extends StatelessWidget {
     return formatter.format(dateTime);
   }
 
-  Widget buildConcern(Concern concern) {
+  Widget buildConcern(BuildContext context, Concern concern) {
     return Container(
       margin: const EdgeInsets.all(31),
       alignment: Alignment.center,
@@ -70,6 +71,16 @@ class ViewConcerns extends StatelessWidget {
           Text(concern.location),
           Text(getFormattedDate(concern)),
           Text(getFormattedTime(concern)),
+          IconButton(
+            onPressed: () => showModalBottomSheet(
+              context: context,
+              builder: (context) => ConcernBottomSheet(concern),
+            ),
+            icon: const Icon(
+              Icons.read_more,
+              size: 55,
+            ),
+          )
         ],
       ),
     );
@@ -92,8 +103,9 @@ class ViewConcerns extends StatelessWidget {
               return const Center(child: Text('No concerns found'));
             } else {
               return ListView(
-                children:
-                    concerns.map((concern) => buildConcern(concern)).toList(),
+                children: concerns
+                    .map((concern) => buildConcern(context, concern))
+                    .toList(),
               );
             }
           } else {
