@@ -22,9 +22,9 @@ class AskingNickname extends StatelessWidget {
               controller: nicknameController,
             ),
             ElevatedButton(
-                onPressed: () =>
-                    nickname.writeNickname(nicknameController.text),
-                child: Text('save')),
+              onPressed: () => nickname.writeNickname(nicknameController.text),
+              child: Text('save'),
+            ),
             ElevatedButton(
                 onPressed: nickname.readNickname, child: Text('read')),
             Text(nickname.readNickname()),

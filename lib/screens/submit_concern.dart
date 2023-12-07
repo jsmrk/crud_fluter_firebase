@@ -121,6 +121,7 @@ class _SavingDataState extends State<SavingData> {
             controller: locationusernameController,
             decoration: const InputDecoration(hintText: 'Location'),
           ),
+          Text(Nickname().readNickname().toString()),
           IconButton(
             onPressed: () async {
               List<String> downloadURLs = [];
