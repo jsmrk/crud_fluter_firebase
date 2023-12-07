@@ -12,16 +12,6 @@ class ViewConcerns extends StatelessWidget {
     return Nickname().readNickname();
   }
 
-  // Stream<List<Concern>> readConcerns() {
-  //   return FirebaseFirestore.instance
-  //       .collection('nickname')
-  //       .doc(nickname())
-  //       .collection('concern')
-  //       .snapshots()
-  //       .map((snapshot) =>
-  //           snapshot.docs.map((doc) => Concern.fromJson(doc.data())).toList());
-  // }
-
   Stream<List<Concern>> readConcerns() {
     return FirebaseFirestore.instance
         .collection('nickname')
@@ -33,7 +23,16 @@ class ViewConcerns extends StatelessWidget {
               final timestamp = data['datetime'];
               final dateTime = timestamp.toDate();
 
+              List<String>? imageURLs;
+              try {
+                // Check for null or non-list value
+                imageURLs = (data['imageURL'] as List).cast<String>();
+              } catch (error) {
+                print('Error retrieving image URLs: $error');
+              }
+
               final concern = Concern(
+                imageURLs: imageURLs,
                 urgency: data['urgency'],
                 title: data['title'],
                 description: data['description'],
@@ -44,29 +43,22 @@ class ViewConcerns extends StatelessWidget {
             }).toList());
   }
 
-  Widget buildConcern(Concern? concern) {
-    if (concern == null) {
-      // Handle case where concern is null
-      return Center(child: Text('Concern is null'));
-    } else if (concern.urgency.isEmpty || concern.title.isEmpty) {
-      // Handle case where concern data is missing
-      return Text('Concern Missing');
-    } else {
-      // Use the existing code to display concern details
-      return Container(
-        margin: EdgeInsets.all(31),
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            Text(concern.urgency),
-            Text(concern.title),
-            Text(concern.description),
-            Text(concern.location),
-            Text(concern.dateTime.toString()),
-          ],
-        ),
-      );
-    }
+  Widget buildConcern(Concern concern) {
+    // Use the existing code to display concern details
+    return Container(
+      margin: const EdgeInsets.all(31),
+      alignment: Alignment.center,
+      child: Column(
+        children: [
+          for (final imageUrl in concern.imageURLs!) Image.network(imageUrl),
+          Text(concern.urgency),
+          Text(concern.title),
+          Text(concern.description),
+          Text(concern.location),
+          Text(concern.dateTime.toString()),
+        ],
+      ),
+    );
   }
 
   @override
@@ -79,11 +71,11 @@ class ViewConcerns extends StatelessWidget {
             print('Erorroreroeroeoreoroeroe herere:::::::');
             print(snapshot.error);
             print('Erorroreroeroeoreoroeroe herere:::::::');
-            return Text('An error occured!');
+            return const Text('An error occured!');
           } else if (snapshot.hasData) {
             final concerns = snapshot.data!; // Use plural 'concerns'
             if (concerns.isEmpty) {
-              return Center(child: Text('No concerns found'));
+              return const Center(child: Text('No concerns found'));
             } else {
               return ListView(
                 children:
