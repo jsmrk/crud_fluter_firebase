@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
+import '../models/concern_model.dart';
 import 'nickname_service.dart';
 
-class Concern {
+class ReadConcern {
   int _index = 0;
 
   Future addUsername({
@@ -55,4 +56,6 @@ class Concern {
     var box = await Hive.openBox('indexBox');
     await box.put('index', _index);
   }
+
+  static fromJson(Map<String, dynamic> data) {}
 }

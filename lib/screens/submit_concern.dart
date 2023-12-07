@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crud_fluter_firebase/screens/view_concerns.dart';
 import 'package:crud_fluter_firebase/services/nickname_service.dart';
-import 'package:crud_fluter_firebase/services/concern_service.dart';
+import 'package:crud_fluter_firebase/services/saving_concern_service.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class SavingData extends StatefulWidget {
 }
 
 class _SavingDataState extends State<SavingData> {
-  final _concern = Concern();
+  final _concern = ReadConcern();
   String _selectedUrgency = 'Low';
   List<String> urgency = ['Low', 'High'];
   final titleController = TextEditingController();
@@ -175,6 +176,14 @@ class _SavingDataState extends State<SavingData> {
                     ),
             ),
           ),
+          ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ViewConcerns()),
+                );
+              },
+              child: Text('View Concerns'))
         ],
       ),
     );
